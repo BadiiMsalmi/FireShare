@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'app_user')]
+    #[Route('/', name: 'app_user')]
     public function index(): Response
     {
         return $this->render('user/login.html.twig', [
