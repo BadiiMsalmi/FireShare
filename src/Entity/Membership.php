@@ -17,9 +17,9 @@ class Membership
 
 
 
-    #[ORM\ManyToOne(targetEntity: Group::class, inversedBy: "memberships")]
+    #[ORM\ManyToOne(targetEntity: Groups::class, inversedBy: "memberships")]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Group $group = null;
+    private ?Groups $group = null;
 
 
     #[ORM\ManyToOne(inversedBy: 'Memberships')]

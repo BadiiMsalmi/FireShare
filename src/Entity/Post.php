@@ -40,7 +40,7 @@ class Post
 
     #[ORM\ManyToOne(inversedBy: 'postes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Group $group = null;
+    private ?Groups $group = null;
 
 
     /**
