@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Authentication{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+
+    <div class="login-wrap">
+        <div class="login-html">
+            <!-- Display error message if there's an authentication error -->
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+            <label for="tab-1" class="tab">Sign In</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up">
+            <label for="tab-2" class="tab">Sign Up</label>
+            <div class="login-form">
+                <!-- Sign In Form -->
+                <div class="sign-in-htm">
+                    <form method="post" action="{{ path('app_login') }}">
+                        <div class="group">
+                            <label for="email" class="label">Email</label>
+                            <input id="email" name="email" type="text" class="input" value="{{ last_username }}" required>
+                        </div>
+                        <div class="group">
+                            <label for="password" class="label">Password</label>
+                            <input id="password" name="password" type="password" class="input" data-type="password" required>
+                        </div>
+                        <div class="group">
+                            <input id="remember_me" name="_remember_me" type="checkbox" class="check">
+                            <label for="remember_me"><span class="icon"></span> Keep me Signed in</label>
+                        </div>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <div class="group">
+                            <button type="submit" class="button">Sign In</button>
+                        </div>
+                    </form>
+                    <div class="hr"></div>
+                    <div class="foot-lnk">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                </div>
+                <!-- Sign Up Form -->
+                <div class="sign-up-htm">
+                    {{ form_start(registrationForm, {'action': path('app_register'), 'method': 'POST'}) }}
+                    <div class="group">
+                        <label for="email" class="label">Email Address</label>
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'input', 'id': 'email'}}) }}
+                    </div>
+                    <div class="group">
+                        <label for="firstName" class="label">First Name</label>
+                        {{ form_widget(registrationForm.firstName, {'attr': {'class': 'input', 'id': 'firstName'}}) }}
+                    </div>
+                    <div class="group">
+                        <label for="lastName" class="label">Last Name</label>
+                        {{ form_widget(registrationForm.lastName, {'attr': {'class': 'input', 'id': 'lastName'}}) }}
+                    </div>
+                    <div class="group">
+                        <label for="roles" class="label">Role</label>
+                        {{ form_widget(registrationForm.roles, {'attr': {'class': 'input', 'id': 'roles'}}) }}
+                    </div>
+                    <div class="group">
+                        <label for="password" class="label">Password</label>
+                        {{ form_widget(registrationForm.plainPassword, {
+                            'attr': {'class': 'input', 'id': 'password', 'data-type': 'password'}
+                        }) }}
+                    </div>
+                    <div class="group">
+                        <button type="submit" class="button">Sign Up</button>
+                    </div>
+                    {{ form_end(registrationForm) }}
+                    <div class="hr"></div>
+                    <div class="foot-lnk">
+                        <label for="tab-1">Already a Member?</label>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
