@@ -49,11 +49,11 @@ class Post
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', orphanRemoval: true)]
     private Collection $comments;
 
-    /**
-     * @var Collection<int, vote>
-     */
-    #[ORM\OneToMany(targetEntity: vote::class, mappedBy: 'post', orphanRemoval: true)]
-    private Collection $votes;
+//    /**
+//     * @var Collection<int, vote>
+//     */
+//    #[ORM\OneToMany(targetEntity: vote::class, mappedBy: 'post', orphanRemoval: true)]
+//    private Collection $votes;
 
     public function __construct()
     {

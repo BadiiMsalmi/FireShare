@@ -21,4 +21,4 @@ security:
             custom_authenticator: App\Security\AuthAuthenticator
             entry_point: App\Security\AuthAuthenticator
     access_control:
-        - { path: ^/home, roles: IS_AUTHENTICATED_FULLY }
+#        - { path: ^/home, roles: IS_AUTHENTICATED_FULLY }
