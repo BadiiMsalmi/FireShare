@@ -75,34 +75,15 @@
     <div class="sideBarContainer">
         <div class="sidebar left">
             <div class="container borderNone">
-            {% for gp in groups %}
-                <div class="globalProfile">
-                    <div class="name">{{ gp.name }}</div>
-                    <div class="globalRoundProfile" ></div>
-                </div>
-            {% endfor %}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./ico/1.png);"></div>#}
-{#                    <div class="name">COVID-19 info center</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./ico/2.png);"></div>#}
-{#                    <div class="name">Pages</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./ico/3.png);"></div>#}
-{#                    <div class="name">Friends</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./ico/4.png);"></div>#}
-{#                    <div class="name">Messenger</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile circle">#}
-{#                        <i class="fas fa-angle-down"></i>#}
-{#                    </div>#}
-{#                    <div class="name">See More</div>#}
-{#                </div>#}
+                {% for gp in groups %}
+                    <div class="globalProfile">
+                        <div class="name">{{ gp.name }}</div>
+                        <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/plus.png') }}');
+                                width: 20px; height: 20px">
+                        </div>
+                    </div>
+                {% endfor %}
+
             </div>
 
 {#            <div class="container">#}
@@ -135,98 +116,19 @@
 {#            </div>#}
         </div>
 
-{#        <div class="sidebar right">#}
-{#            {% for mb in memberships %}#}
+        <div class="sidebar right">
+            <div class="container">
 
+                {% for mbr in memberships %}
+                    <div class="globalProfile">
+                        <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/minus.png') }}');
+                                width: 20px; height: 20px">
+                        </div>
+                        <div class="name">{{ mbr.name }}</div>
+                    </div>
+                {% endfor %}
 
-{#            <div class="container borderNone">#}
-{#                <div class="mainTitle">#}
-{#                    <h3 class="padding">{{ mb.id }}</h3>#}
-{#                    <i class="fas fa-ellipsis-h"></i>#}
-{#                </div>#}
-{#            {% endfor %}#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/profile.jpg);"></div>#}
-{#                    <div class="name">My Page</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile globalProfileSmall">#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/bellLight.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="name">25 Notifications</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile globalProfileSmall">#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/megaphone.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="name">Create Promotion</div>#}
-{#                </div>#}
-{#            </div>#}
-
-{#            <div class="container">#}
-{#                <div class="mainTitle">#}
-{#                    <h3 class="padding">Contacts</h3>#}
-{#                    <div class="items icons">#}
-{#                        <i class="fas fa-video"></i>#}
-{#                        <i class="fas fa-search"></i>#}
-{#                        <i class="fas fa-ellipsis-h"></i>#}
-{#                    </div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/1.jpg);">#}
-{#                        <div class="active"></div>#}
-{#                    </div>#}
-{#                    <div class="name">Honey Rangel</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/1.jpg);">#}
-{#                        <div class="active"></div>#}
-{#                    </div>#}
-{#                    <div class="name">Elisa Maddox</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/2.jpg);">#}
-{#                        <div class="active"></div>#}
-{#                    </div>#}
-{#                    <div class="name">Dawson Mason</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/3.jpg);">#}
-{#                        <div class="active"></div>#}
-{#                    </div>#}
-{#                    <div class="name">Ira Gordon</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/4.jpg);">#}
-{#                        <div class="active"></div>#}
-{#                    </div>#}
-{#                    <div class="name">Adam Cobb</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/5.jpg);">#}
-{#                        <div class="active"></div>#}
-{#                    </div>#}
-{#                    <div class="name">Sommer Lawrence</div>#}
-{#                </div>#}
-
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/6.jpg);">#}
-{#                        <div class="active"></div>#}
-{#                    </div>#}
-{#                    <div class="name">Nojus Cantu</div>#}
-{#                </div>#}
-
-{#            </div>#}
-
+            </div>
         </div>
     </div>
 

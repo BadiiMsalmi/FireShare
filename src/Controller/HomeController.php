@@ -24,22 +24,29 @@ class HomeController extends AbstractController
     {
 
         $posts = $this->entityManager->getRepository(Post::class)->findAll();
-        $user = $security->getUser();
+        $currentUser = $security->getUser();
 
-        $groups = $this->entityManager->getRepository(Groups::class)->findAll();
-//        $groups = $this->entityManager->createQueryBuilder()
-//            ->select('name')
-//            ->from(Groups::class, 'g')
-//            ->where('g.isActive = :isActive') // Example condition
-//            ->setParameter('isActive', true) // Set the parameter value
-//            ->orderBy('g.name', 'ASC') // Optional: Sort the results
-//            ->getQuery()
-//            ->getResult();
+//        $groups = $this->entityManager->getRepository(Groups::class)->findAll();
+        $queryGroups = $this->entityManager->createQuery(
+            "SELECT g.id, g.name FROM App\Entity\Groups g WHERE g.id NOT IN 
+                (SELECT IDENTITY(m.group) FROM App\Entity\Membership m WHERE m.membershipUser = :userId)"
+        );
+        $queryGroups->setParameter('userId', $currentUser->getId());
+        $resultGroups = $queryGroups->getResult();
+
+        $queryMemberships = $this->entityManager->createQuery(
+            "SELECT g.id, g.name FROM App\Entity\Groups g WHERE g.id IN 
+                (SELECT IDENTITY(m.group) FROM App\Entity\Membership m WHERE m.membershipUser = :userId)"
+        );
+        $queryMemberships->setParameter('userId', $currentUser->getId());
+        $resultMemberships = $queryMemberships->getResult();
 
 
         return $this->render('home/index.html.twig', [
             'posts' => $posts,
-            'groups' => $groups
+            'groups' => $resultGroups,
+            'memberships' => $resultMemberships,
+
         ]);
     }
 }
