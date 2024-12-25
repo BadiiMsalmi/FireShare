@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Group;
+use App\Entity\Groups;
 use App\Entity\Post;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -27,7 +27,7 @@ class PostType extends AbstractType
                 'choice_label' => 'id',
             ])
             ->add('group', EntityType::class, [
-                'class' => Group::class,
+                'class' => Groups::class,
                 'choice_label' => 'id',
             ])
         ;

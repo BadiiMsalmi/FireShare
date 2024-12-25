@@ -24,10 +24,10 @@ class Post
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: "integer")]
-    private int $upvotes;
+    private int $upvotes = 0;
 
     #[ORM\Column(type: "integer")]
-    private int $downvotes ;
+    private int $downvotes = 0;
 
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "posts")]
@@ -58,7 +58,11 @@ class Post
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->votes = new ArrayCollection();
+//        $this->votes = new ArrayCollection();
+        $this->upvotes = 0; // Or any other default value
+        $this->downvotes = 0; // Or any other default value
+
+        $this->createdAt = new \DateTime();
     }
 
 
@@ -134,12 +138,12 @@ class Post
         return $this;
     }
 
-    public function getGroup(): ?Group
+    public function getGroup(): ?Groups
     {
         return $this->group;
     }
 
-    public function setGroup(?Group $group): self
+    public function setGroup(?Groups $group): self
     {
         $this->group = $group;
         return $this;
