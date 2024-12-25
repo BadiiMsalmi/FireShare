@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use App\Entity\User;
+use App\Entity\Groups;
+
 #[ORM\Entity]
 class Membership
 {
@@ -43,23 +46,23 @@ class Membership
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
+//    public function getUser(): ?User
+//    {
+//        return $this->user;
+//    }
+//
+//    public function setUser(?User $user): self
+//    {
+//        $this->user = $user;
+//        return $this;
+//    }
 
     public function getGroup(): ?Group
     {
         return $this->group;
     }
 
-    public function setGroup(?Group $group): self
+    public function setGroup(?Groups $group): self
     {
         $this->group = $group;
         return $this;

@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Group;
+use App\Entity\Groups;
 use App\Entity\Membership;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -19,7 +19,7 @@ class MembershipType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('group', EntityType::class, [
-                'class' => Group::class,
+                'class' => Groups::class,
                 'choice_label' => 'id',
             ])
             ->add('membershipUser', EntityType::class, [

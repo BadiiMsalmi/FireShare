@@ -62,8 +62,8 @@
 {#                </div>#}
             </div>
             <div class="profile">
-                <div class="img" style="background-image: url('{{ asset('assets/img/profile.jpg') }}');"></div>
-                <div class="username">User</div>
+{#                <div class="img" style="background-image: url('{{ asset('assets/img/profile.jpg') }}');"></div>#}
+                <div class="username">{{ user.firstName }} {{ user.lastName}} </div>
             </div>
         </div>
 
@@ -76,11 +76,20 @@
         <div class="sidebar left">
             <div class="container borderNone">
                 {% for gp in groups %}
-                    <div class="globalProfile">
+                    <div class="globalProfile join_grp">
                         <div class="name">{{ gp.name }}</div>
-                        <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/plus.png') }}');
-                                width: 20px; height: 20px">
-                        </div>
+
+                        <form action="{{ path('join_membership', { 'id': gp.id }) }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="groupId" value="{{ gp.id }}">
+                            <button type="submit" class="globalRoundProfile"
+                                    style="background-image: url('{{ asset('assets/img/plus.png') }}');
+                                            width: 20px; height: 20px; border: none; cursor: pointer;">
+                            </button>
+{#                            <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/plus.png') }}');#}
+{#                                    width: 15px; height: 15px">#}
+{#                            </div>#}
+                        </form>
+
                     </div>
                 {% endfor %}
 
@@ -120,10 +129,14 @@
             <div class="container">
 
                 {% for mbr in memberships %}
-                    <div class="globalProfile">
-                        <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/minus.png') }}');
-                                width: 20px; height: 20px">
-                        </div>
+                    <div class="globalProfile join_grp">
+                        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="groupId" value="{{ mbr.id }}">
+                            <button type="submit" class="globalRoundProfile"
+                                    style="background-image: url('{{ asset('assets/img/minus.png') }}');
+                                            width: 20px; height: 20px; border: none; cursor: pointer;">
+                            </button>
+                        </form>
                         <div class="name">{{ mbr.name }}</div>
                     </div>
                 {% endfor %}
@@ -200,7 +213,7 @@
                 <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/2.jpg') }}');">
                     <span></span>
                 </div>
-                <div class="post">
+                <div class="btn post" id="openModal">
                     What's on your mind, FilipCodes YT?
                 </div>
             </div>
@@ -227,51 +240,60 @@
 {#            </div>#}
         </div>
 
-        {% for p in posts %}
+        {% if posts is not null and posts|length > 0 %}
+            {% for p in posts %}
 
-            <div class="mainPosts">
-                <div class="title">
-                    <div class="profile">
-                        <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/1.jpg') }}');">
-                            <span></span>
+                <div class="mainPosts">
+                    <div class="title">
+                        <div class="profile">
+                            <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/1.jpg') }}');">
+                                <span></span>
+                            </div>
+
+                            <div class="name">
+                                <a href="#">{{ p.firstName  }}  {{ p.lastName }}</a>
+                                <span>{{ p.name }} | {{ p.createdAt|date('Y-m-d H:i') }} <i class="fas fa-globe-americas"></i></span>
+                            </div>
                         </div>
-
-                        <div class="name">
-{#                            <a href="#">{{ p.content }}</a>#}
-                            <a href="#">{{ p.author.firstName  }}  {{ p.author.lastName }}</a>
-
-                            <span>{{ p.content }} | {{ p.getCreatedAt|date('Y-m-d H:i') }} <i class="fas fa-globe-americas"></i></span>
-                        </div>
+                        <i class="fas fa-ellipsis-h"></i>
                     </div>
-                    <i class="fas fa-ellipsis-h"></i>
-                </div>
 
-                <div class="description">
-                    <p>{{ p.content }}</p>
-                </div>
+                    <div class="description">
+                        <p>{{ p.content }}</p>
+                    </div>
 
-                <div class="likeShare">
+                    <div class="likeShare">
                     <span>
                         <div class="svg">
                             <img src="{{ asset('assets/svg/upvote.svg') }}" alt="">
                         </div>
-                        <h3>Upvote</h3>
+                        <h3>{{ p.upvotes }}</h3>
                     </span>
-                    <span>
+                        <span>
+{#                        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">#}
+                            {#                            <input type="hidden" name="groupId" value="{{ mbr.id }}">#}
+                            {#                            <button type="submit" class="globalRoundProfile"#}
+                            {#                                    style="background-image: url('{{ asset('assets/img/minus.png') }}');#}
+                            {#                                            width: 20px; height: 20px; border: none; cursor: pointer;">#}
+                            {#                            </button>#}
+                            {#                        </form>#}
                         <div class="svg">
                             <img src="{{ asset('assets/svg/downvote.svg') }}" alt="">
                         </div>
-                        <h3>Downvote</h3>
+                        <h3>{{ p.downvotes }}</h3>
                     </span>
-                    <span>
+                        <span>
                         <div class="svg">
                             <img src="{{ asset('assets/svg/comment.svg') }}" alt="">
                         </div>
                         <h3>Comment</h3>
                     </span>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <p>No posts available.</p>
+        {% endif %}
 
 {#        <div class="rooms">#}
 {#            <div class="title">#}
@@ -520,5 +542,61 @@
 {#        </div>#}
 
 {#    </div>#}
+{#        <button class="btn" id="openModal">Open Post Modal</button>#}
+{#        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">#}
 
+{#        </form>#}
+        <div class="modal" id="postModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Group Post</h3>
+                    <span class="close" id="closeModal">&times;</span>
+                </div>
+                <form  action="{{ path('post_new') }}" method="POST">
+                    <div class="form-group">
+                        <label for="postTitle">Title</label>
+                        <input type="text" id="postTitle" name="title" placeholder="Enter title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="postGroup">Select Group</label>
+                        <select id="postGroup" name="group" class="form-control">
+                            {% for membership in memberships %}
+                                <option value="{{ membership.id }}">{{ membership.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="postContent">Content</label>
+                        <textarea id="postContent" name="content" rows="4" placeholder="Write your post..." required></textarea>
+                    </div>
+{#                    <button type="submit" class="btn-primary">Post</button>#}
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> Post
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+
+        <script>
+            const openModalButton = document.getElementById('openModal');
+            const closeModalButton = document.getElementById('closeModal');
+            const modal = document.getElementById('postModal');
+
+            openModalButton.addEventListener('click', () => {
+                modal.style.display = 'flex';
+            });
+
+            closeModalButton.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        </script>
+    </div>
 {#</body>#}

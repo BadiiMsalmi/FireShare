@@ -23,8 +23,17 @@ class HomeController extends AbstractController
     public function index(Security $security): Response
     {
 
-        $posts = $this->entityManager->getRepository(Post::class)->findAll();
         $currentUser = $security->getUser();
+
+//        $queryPosts = $this->entityManager->getRepository(Post::class)->findAll();
+        $queryPosts = $this->entityManager->createQuery(
+            "SELECT count(p.id) nbr, p.title, p.content, p.upvotes, p.downvotes, p.createdAt, g.name, u.firstName, u.lastName
+                FROM App\Entity\Post p, App\Entity\Groups g, App\Entity\Membership m, App\Entity\User u
+                WHERE p.group = g.id AND g.id = m.group AND m.membershipUser = :currentUser
+                Group by p.id"
+        );
+        $queryPosts->setParameter('currentUser', $currentUser->getId());
+        $queryPosts = $queryPosts->getResult();
 
 //        $groups = $this->entityManager->getRepository(Groups::class)->findAll();
         $queryGroups = $this->entityManager->createQuery(
@@ -41,9 +50,13 @@ class HomeController extends AbstractController
         $queryMemberships->setParameter('userId', $currentUser->getId());
         $resultMemberships = $queryMemberships->getResult();
 
+//        if ($queryPosts) {
+//            $queryPosts = null;
+//        }
 
         return $this->render('home/index.html.twig', [
-            'posts' => $posts,
+            "user" => $currentUser,
+            'posts' => $queryPosts,
             'groups' => $resultGroups,
             'memberships' => $resultMemberships,
 
