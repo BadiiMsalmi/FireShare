@@ -27,7 +27,7 @@ class HomeController extends AbstractController
 
 //        $queryPosts = $this->entityManager->getRepository(Post::class)->findAll();
         $queryPosts = $this->entityManager->createQuery(
-            "SELECT count(p.id) nbr, p.title, p.content, p.upvotes, p.downvotes, p.createdAt, g.name, u.firstName, u.lastName
+            "SELECT count(p.id) nbr, p.id As post_id, p.title, p.content, p.upvotes, p.downvotes, p.createdAt, g.name, u.firstName, u.lastName
                 FROM App\Entity\Post p, App\Entity\Groups g, App\Entity\Membership m, App\Entity\User u
                 WHERE p.group = g.id AND g.id = m.group AND m.membershipUser = :currentUser
                 Group by p.id"
@@ -61,5 +61,11 @@ class HomeController extends AbstractController
             'memberships' => $resultMemberships,
 
         ]);
+    }
+
+    #[Route('/updateprofile', name: 'update_profile')]
+    public function update(Security $security): Response {
+
+        return $this->render('user/update.html.twig', []);
     }
 }

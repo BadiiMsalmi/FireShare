@@ -263,12 +263,15 @@
                     </div>
 
                     <div class="likeShare">
-                    <span>
-                        <div class="svg">
-                            <img src="{{ asset('assets/svg/upvote.svg') }}" alt="">
-                        </div>
-                        <h3>{{ p.upvotes }}</h3>
-                    </span>
+                        <form action="{{ path('post_upvote', { id: p.post_id }) }}" method="POST" class="upvote-form">
+                            <button type="submit" class="upvote-button">
+                                <div class="svg">
+                                    <img src="{{ asset('assets/svg/upvote.svg') }}" alt="Upvote">
+                                </div>
+                                <h3>{{ p.upvotes }}</h3>
+                            </button>
+                        </form>
+
                         <span>
 {#                        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">#}
                             {#                            <input type="hidden" name="groupId" value="{{ mbr.id }}">#}
@@ -364,180 +367,6 @@
 {#                    <span></span>#}
 {#                    <div class="active"></div>#}
 {#                </div>#}
-{#            </div>#}
-{#        </div>#}
-
-{#        <div class="mainPosts">#}
-{#            <div class="title">#}
-{#                <div class="profile">#}
-{#                    <div class="globalRoundProfile" style="background-image: {{ asset('assets/img/2.jpg') }}">#}
-{#                        <span></span>#}
-{#                    </div>#}
-
-{#                    <div class="name">#}
-{#                        <a href="#">User Name</a>#}
-{#                        <span>1h <i class="fas fa-globe-americas"></i></span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <i class="fas fa-ellipsis-h"></i>#}
-{#            </div>#}
-
-{#            <div class="description">#}
-{#                LandingPage UI Design Using Html Css/Sass JS#}
-{#            </div>#}
-
-{#            <div class="post" style="background-image: url(./img/post-2.jpg);"></div>#}
-
-{#            <div class="reaction">#}
-{#                <div class="icons">#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/like.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/heart.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/care.svg" alt="">#}
-{#                    </div>#}
-{#                    <a href="#">32k</a>#}
-{#                </div>#}
-{#            </div>#}
-
-{#            <div class="likeShare">#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/like_light.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Like</h3>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/comment.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Comment</h3>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/share.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Share</h3>#}
-{#                </span>#}
-{#            </div>#}
-{#        </div>#}
-
-{#        <div class="mainPosts">#}
-{#            <div class="title">#}
-{#                <div class="profile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/3.jpg);">#}
-{#                        <span></span>#}
-{#                    </div>#}
-
-{#                    <div class="name">#}
-{#                        <a href="#">User Name</a>#}
-{#                        <span>1h <i class="fas fa-globe-americas"></i></span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <i class="fas fa-ellipsis-h"></i>#}
-{#            </div>#}
-
-{#            <div class="description">#}
-{#                LandingPage UI Design Using Html Css/Sass JS#}
-{#            </div>#}
-
-{#            <div class="post" style="background-image: url(./img/post-3.jpg);"></div>#}
-
-{#            <div class="reaction">#}
-{#                <div class="icons">#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/like.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/heart.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/care.svg" alt="">#}
-{#                    </div>#}
-{#                    <a href="#">32k</a>#}
-{#                </div>#}
-{#            </div>#}
-
-{#            <div class="likeShare">#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/like_light.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Like</h3>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/comment.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Comment</h3>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/share.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Share</h3>#}
-{#                </span>#}
-{#            </div>#}
-{#        </div>#}
-
-{#        <div class="mainPosts">#}
-{#            <div class="title">#}
-{#                <div class="profile">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/4.jpg);">#}
-{#                        <span></span>#}
-{#                    </div>#}
-
-{#                    <div class="name">#}
-{#                        <a href="#">User Name</a>#}
-{#                        <span>1h <i class="fas fa-globe-americas"></i></span>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <i class="fas fa-ellipsis-h"></i>#}
-{#            </div>#}
-
-{#            <div class="description">#}
-{#                LandingPage UI Design Using Html Css/Sass JS#}
-{#            </div>#}
-
-{#            <div class="post" style="background-image: url(./img/post-4.jpg);"></div>#}
-
-{#            <div class="reaction">#}
-{#                <div class="icons">#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/like.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/heart.svg" alt="">#}
-{#                    </div>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/care.svg" alt="">#}
-{#                    </div>#}
-{#                    <a href="#">32k</a>#}
-{#                </div>#}
-{#            </div>#}
-
-{#            <div class="likeShare">#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/like_light.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Like</h3>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/comment.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Comment</h3>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/share.svg" alt="">#}
-{#                    </div>#}
-{#                    <h3>Share</h3>#}
-{#                </span>#}
 {#            </div>#}
 {#        </div>#}
 

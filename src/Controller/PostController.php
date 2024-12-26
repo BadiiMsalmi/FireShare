@@ -24,15 +24,14 @@ class PostController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-//    #[Route('', name: 'post_index', methods: ['GET'])]
-//    public function index(): Response
-//    {
-//        $posts = $this->entityManager->getRepository(Post::class)->findAll();
-//
-//        return $this->render('post/index.html.twig', [
-////            'posts' => $posts,
-//        ]);
-//    }
+    #[Route('/group/{id}/upvote', name: 'post_upvote', methods: ['POST'])]
+    public function postUpvote(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $groupe_id = $request->request->get('');
+
+
+        return $this->redirectToRoute('app_home');
+    }
 
     #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
@@ -60,15 +59,6 @@ class PostController extends AbstractController
 
         $this->entityManager->persist($post);
         $this->entityManager->flush();
-
-
-//        $form = $this->createForm(PostType::class, $post);
-//
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $this->entityManager->persist($post);
-//            $this->entityManager->flush();
-//        }
 
         return $this->redirectToRoute('app_home'); // Redirect or return a response
     }
