@@ -39,7 +39,7 @@ class Groups
     /**
      * @var Collection<int, Post>
      */
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'groupOfPost', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'group', orphanRemoval: true)]
     private Collection $postes;
 
     public function __construct()
