@@ -24,11 +24,42 @@ class PostController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/group/{id}/upvote', name: 'post_upvote', methods: ['POST'])]
+    #[Route('/{id}/upvote', name: 'post_upvote', methods: ['POST'])]
     public function postUpvote(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $groupe_id = $request->request->get('');
 
+        $post = $entityManager->getRepository(Post::class)->find($id);
+
+        $post->setUpvotes($post->getUpvotes() + 1);
+
+        $this->entityManager->persist($post);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/{id}/downvote', name: 'post_downvote', methods: ['POST'])]
+    public function postDownvote(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $post = $entityManager->getRepository(Post::class)->find($id);
+
+        $post->setDownvotes($post->getDownvotes() + 1);
+
+        $this->entityManager->persist($post);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/{id}/comment', name: 'post_comment', methods: ['POST'])]
+    public function postComment(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+//        $post = $entityManager->getRepository(Post::class)->find($id);
+//
+//        $post->setDownvotes($post->getDownvotes() + 1);
+//
+//        $this->entityManager->persist($post);
+//        $this->entityManager->flush();
 
         return $this->redirectToRoute('app_home');
     }

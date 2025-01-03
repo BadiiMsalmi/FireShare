@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Groups;
-use App\Entity\Membership;
-use App\Entity\Post;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Security;
@@ -19,6 +18,11 @@ class HomeController extends AbstractController
     {
         $this->entityManager = $entityManager;
     }
+    #[Route('/test', name: 'test')]
+    public function test(): Response {
+        return $this->render('user/index.html.twig');
+    }
+
     #[Route('/home', name: 'app_home')]
     public function index(Security $security): Response
     {
@@ -63,9 +67,67 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/profile', name: 'profile')]
+    public function profile(Security $security): Response {
+
+        $currentUser = $security->getUser();
+
+        $name = $currentUser->getFirstName() . ' ' . $currentUser->getLastName();
+
+        return $this->render('user/profile.html.twig', [
+            'user' => $name,
+        ]);
+    }
+
     #[Route('/updateprofile', name: 'update_profile')]
     public function update(Security $security): Response {
 
-        return $this->render('user/update.html.twig', []);
+        $currentUser = $security->getUser();
+
+        $name = $currentUser->getFirstName() . ' ' . $currentUser->getLastName();
+
+        return $this->render('user/update.html.twig', [
+            "currentUser" => $currentUser,
+            'user' => $name,
+        ]);
     }
+
+    #[Route('/editprofile', name: 'update_profile_post', methods: ['POST'])]
+    public function updateprofile(Security $security, Request $request, EntityManagerInterface $entityManager): Response {
+
+        $user = $security->getUser();
+
+        $firstName = $request->request->get('firstName');
+        $lastName = $request->request->get('lastName');
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+
+        // Update only if the field is provided and has changed
+        if (!empty($firstName)) {
+            $user->setFirstName($firstName);
+        }
+
+        if (!empty($lastName)) {
+            $user->setLastName($lastName);
+        }
+
+        if (!empty($email)) {
+            $user->setEmail($email);
+        }
+
+        if (empty($password)) {
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $user->setPassword($hashedPassword);
+
+//            if (!password_verify($password, $user->getPassword())) {
+//                $user->setPassword($hashedPassword);
+//            }
+        }
+
+        $entityManager->flush();
+
+
+        return $this->redirectToRoute('app_home');
+    }
+
 }

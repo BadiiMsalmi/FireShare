@@ -23,7 +23,7 @@ class Groups
     private ?string $description = null;
 
     #[ORM\Column(type: "datetime")]
-    private DateTimeInterface $createdAt;
+    private ?DateTimeInterface $createdAt = null;
 
 
     #[ORM\OneToMany(targetEntity: Membership::class, mappedBy: "group")]
@@ -47,6 +47,8 @@ class Groups
         $this->posts = new ArrayCollection();
         $this->memberships = new ArrayCollection();
         $this->postes = new ArrayCollection();
+        $this->createdAt = new \DateTime('now');
+
     }
 
 

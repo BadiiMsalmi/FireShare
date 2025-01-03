@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Update</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+{#    <link rel="stylesheet" href="styles.css">#}
 </head>
 <style>
     /* Basic Reset */
@@ -162,47 +162,46 @@
 
 </style>
 <body>
-<div class="container">
-    <div class="header">
-        <div class="user-info">
-            <p>Welcome, <span id="userName">John Doe</span></p>
+    <div class="container">
+        <div class="header">
+            <div class="user-info">
+                <p>Welcome, <span id="userName">{{ user }}</span></p>
+            </div>
+            <div class="header-buttons">
+                <button onclick="window.location.href='/home'" class="btn">Home</button>
+                <button onclick="logout()" class="btn">Logout</button>
+            </div>
         </div>
-        <div class="header-buttons">
-            <button onclick="window.location.href='/home'" class="btn">Home</button>
-            <button onclick="logout()" class="btn">Logout</button>
+
+        <div class="form-container">
+            <h1>Update Your Profile</h1>
+            <form action="{{ path('update_profile_post') }}" method="POST">
+                <div class="input-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" value="{{ currentUser.lastName }}" id="firstName" name="firstName" placeholder="Enter your first name">
+                </div>
+                <div class="input-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" value="{{ currentUser.firstName }}" id="lastName" name="lastName" placeholder="Enter your last name">
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" value="{{ currentUser.email }}" id="email" name="email" placeholder="Enter your email">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter new password">
+                </div>
+                <button type="submit">Update Profile</button>
+            </form>
         </div>
     </div>
 
-    <div class="form-container">
-        <h1>Update Your Profile</h1>
-        <form action="#" method="POST">
-            <div class="input-group">
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
-            </div>
-            <div class="input-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
-            </div>
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter new password" required>
-            </div>
-            <button type="submit">Update Profile</button>
-        </form>
-    </div>
-</div>
-
-<script>
-    // Simulated logout function (you can replace with actual logic)
-    function logout() {
-        alert("You have been logged out!");
-        window.location.href = '/login'; // Redirect to login page after logout
-    }
-</script>
+    <script>
+        // Simulated logout function (you can replace with actual logic)
+        function logout() {
+            window.location.href = '/logout'; // Redirect to login page after logout
+        }
+    </script>
 </body>
 </html>

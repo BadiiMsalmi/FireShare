@@ -11,65 +11,963 @@
     <title>Document</title>
 </head>
 
+<style>
+
+    /* Modal Background */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Modal Content */
+    .modal-content {
+        width: 90%;
+        max-width: 500px;
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        font-family: 'Roboto', sans-serif;
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    /* Header Section */
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eaeaea;
+        margin-bottom: 15px;
+    }
+
+    .modal-header h3 {
+        font-size: 18px;
+        margin: 0;
+        color: #333;
+    }
+
+    .modal-close {
+        font-size: 20px;
+        color: #888;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .modal-close:hover {
+        color: #555;
+    }
+
+    /* Comments Section */
+    .comment-section {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+
+    .comment {
+        display: flex;
+        gap: 15px;
+        padding: 10px 0;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .comment:last-child {
+        border-bottom: none;
+    }
+
+    .comment-profile {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        background-color: #ddd;
+    }
+
+    .comment-details {
+        flex: 1;
+    }
+
+    .comment-author {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .comment-meta {
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 5px;
+    }
+
+    .comment-text {
+        font-size: 14px;
+        color: #555;
+    }
+
+    /* Input Section */
+    .comment-input-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .comment-input {
+        flex: 1;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    .comment-input:focus {
+        border-color: #0073e6;
+    }
+
+    .comment-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #fff;
+        background-color: #0073e6;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .comment-button:hover {
+        background-color: #005bb5;
+    }
+
+
+
+
+    /* General Styling for Post */
+    .mainPosts {
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        font-family: 'Roboto', sans-serif;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .mainPosts:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Title Section */
+    .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .profile {
+        display: flex;
+        align-items: center;
+    }
+
+    .globalRoundProfile {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        border: 2px solid #ececec;
+        margin-right: 15px;
+        transition: border-color 0.3s;
+    }
+
+    .globalRoundProfile:hover {
+        border-color: #0073e6;
+    }
+
+    .name a {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        text-decoration: none;
+    }
+
+    .name a:hover {
+        color: #0073e6;
+    }
+
+    .name span {
+        display: block;
+        font-size: 13px;
+        color: #777;
+        margin-top: 5px;
+    }
+
+    .title i {
+        font-size: 22px;
+        color: #aaa;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .title i:hover {
+        color: #555;
+    }
+
+    /* Description Section */
+    .description p {
+        font-size: 15px;
+        color: #444;
+        line-height: 1.8;
+        margin-bottom: 15px;
+        white-space: pre-wrap; /* Ensure long text wraps nicely */
+    }
+
+    /* Like, Share, and Comment Section */
+    .likeShare {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 15px;
+        border-top: 1px solid #eaeaea;
+    }
+
+    .likeShare span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .likeShare span:hover {
+        color: #0073e6;
+        transform: scale(1.1);
+    }
+
+    .likeShare .svg img {
+        width: 24px;
+        height: 24px;
+        filter: grayscale(100%);
+        transition: filter 0.3s ease;
+    }
+
+    .likeShare .svg img:hover {
+        filter: grayscale(0%);
+    }
+
+    .likeShare h3 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 500;
+        color: #555;
+    }
+
+    /* Button Styling */
+    button {
+        font: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 10px;
+        border-radius: 8px;
+        transition: background-color 0.3s, color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0073e6;
+        color: #fff;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+        .mainPosts {
+            padding: 15px;
+        }
+
+        .globalRoundProfile {
+            width: 45px;
+            height: 45px;
+        }
+
+        .name a {
+            font-size: 14px;
+        }
+
+        .name span {
+            font-size: 11px;
+        }
+
+        .description p {
+            font-size: 14px;
+        }
+
+        .likeShare span {
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
+
+
+
+
+
+
+
+
+
+    .createPost {
+        width: 100%;
+        max-width: 600px;
+        background: linear-gradient(135deg, #ffffff, #f9fafc);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .createPost:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .input {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .globalRoundProfile {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        background-color: #eee;
+        position: relative;
+        border: 3px solid #f0f0f0;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .globalRoundProfile span {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 15px;
+        height: 15px;
+        background-color: #44c767;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn.post {
+        flex: 1;
+        padding: 15px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #6b7280;
+        background-color: #f8f9fa;
+        border: 2px solid #e5e7eb;
+        border-radius: 30px;
+        cursor: pointer;
+        text-align: left;
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+    }
+
+    .btn.post:hover {
+        background: linear-gradient(135deg, #e0f7fa, #e3edfd);
+        color: #0056b3;
+        border-color: #dbeafe;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn.post:active {
+        transform: scale(0.98);
+    }
+
+    /* Decorative Effects */
+    .decorative-bg {
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(135deg, rgba(34, 193, 195, 0.1), rgba(253, 187, 45, 0.1));
+        filter: blur(60px);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .decorative-bg:nth-child(2) {
+        top: auto;
+        bottom: -50px;
+        left: auto;
+        right: -50px;
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(64, 224, 208, 0.1));
+    }
+
+    .createPost {
+        max-width: none;
+    }
+
+
+
+
+
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background: linear-gradient(120deg, #6a11cb, #2575fc);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .logoSearch {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 30px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background-color: #fff;
+        color: #2575fc;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+        transform: scale(1.1);
+    }
+
+    .profileTools {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .profile:hover {
+        transform: translateX(10px);
+    }
+
+    .profile .img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        border: 3px solid #ffffff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile .username {
+        font-size: 18px;
+        font-weight: 500;
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .profile .username:hover {
+        color: #ffe600;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 15px;
+        font-weight: 500;
+        background-color: #fff;
+        /*color: #2575fc;*/
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #2575fc;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn.logout {
+        background-color: #ff4040;
+        color: #fff;
+    }
+
+    .btn.logout:hover {
+        background-color: #e63b3b;
+    }
+
+
+
+
+
+    /* Container */
+    .globalProfileContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Add Group Button */
+    .add-group-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .add-group-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .add-group-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .add-group-button:active {
+        transform: translateY(1px);
+        box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .add-group-button span {
+        font-size: 18px;
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .plus-icon {
+        width: 24px;
+        height: 24px;
+        stroke: #fff;
+        transition: transform 0.3s ease;
+    }
+
+    .add-group-button:hover .plus-icon {
+        transform: rotate(90deg);
+    }
+
+    /* Add Group Form */
+    .add-group-form {
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #ffffff, #f9f9ff);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .add-group-form form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .group-name-input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        transition: border-color 0.3s ease;
+    }
+
+    .group-name-input:focus {
+        outline: none;
+        border-color: #6a11cb;
+    }
+
+    .submit-group-button {
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .submit-group-button:hover {
+        background: linear-gradient(135deg, #2575fc, #6a11cb);
+        transform: scale(1.05);
+    }
+
+    /* Fade-in Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+
+
+    /* design Modal of creating groups  */
+    /* General Reset */
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Trigger Button */
+    .btn-open-modal {
+        background-color: #4a90e2;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-open-modal:hover {
+        background-color: #357ab8;
+    }
+
+    /* Modal Background */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        animation: fadeIn 0.5s ease;
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: slideDown 0.5s ease;
+    }
+
+    /* Header */
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    /* Close Button */
+    .close-button {
+        font-size: 1.5rem;
+        color: #aaa;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .close-button:hover {
+        color: #555;
+    }
+
+    /* Form */
+    .modal-body {
+        padding: 20px 0;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #333;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #4a90e2;
+        outline: none;
+    }
+
+    /* Buttons */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .btn-cancel {
+        background-color: #e0e0e0;
+        color: #555;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c2c2c2;
+    }
+
+    .btn-submit {
+        background-color: #4a90e2;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #357ab8;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+
+
+    /* modal alert */
+
+    /* Modal styling */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Modal content styling */
+    .modal-content {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Close button */
+    .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    /* Modal actions */
+    .modal-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    /* Buttons */
+    .btn-cancel, .btn-confirm {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-cancel {
+        background-color: #f3f4f6;
+        color: #333;
+    }
+
+    .btn-cancel:hover {
+        background-color: #e5e7eb;
+    }
+
+    .btn-confirm {
+        background-color: #f87171;
+        color: white;
+    }
+
+    .btn-confirm:hover {
+        background-color: #ef4444;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10%);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+</style>
 {#<body>#}
 
-    <header class="header">
+<header class="header">
+    <!-- Logo Section -->
+    <div class="logoSearch">
+        <div class="logo">
+            <i class="fab fa-facebook-f"></i>
+        </div>
+    </div>
 
-        <div class="logoSearch">
-            <div class="logo">
-                <i class="fab fa-facebook-f"></i>
-            </div>
-{#            <div class="search">#}
-{#                <div class="svg">#}
-{#                    <img src="./svg/search.svg" alt="Search">#}
-{#                </div>#}
-{#                <input type="text" placeholder="Search Facebook">#}
-{#            </div>#}
+    <!-- User Actions Section -->
+    <div class="profileTools">
+        <!-- User Profile -->
+        <div class="profile" onclick="window.location.href='/profile';">
+            <div class="img" style="background-image: url('{{ asset('assets/img/profile.jpg') }}');"></div>
+            <div class="username">{{ user.firstName }} {{ user.lastName }}</div>
         </div>
 
-{#        <div class="mainMenu">#}
-{#            <div class="svg active">#}
-{#                <img src="./svg/home.svg" alt="Facebook Home" srcset="">#}
-{#            </div>#}
-{#            <div class="svg">#}
-{#                <img src="./svg/tv.svg" alt="Facebook Watch" srcset="">#}
-{#            </div>#}
-{#            <div class="svg">#}
-{#                <img src="./svg/store.svg" alt="Facebook Store" srcset="">#}
-{#            </div>#}
-{#            <div class="svg">#}
-{#                <img src="./svg/users.svg" alt="Facebook Groups" srcset="">#}
-{#            </div>#}
-{#            <div class="svg">#}
-{#                <img src="./svg/map.svg" alt="Facebook Play" srcset="">#}
-{#            </div>#}
-{#        </div>#}
-
-        <div class="profileTools">
-
-            <div class="tools">
-{#                <div class="svg">#}
-{#                    <img src="./svg/plus.svg" alt="Add">#}
-{#                </div>#}
-{#                <div class="svg">#}
-{#                    <img src="./svg/blackberry-messenger.svg" alt="Messages">#}
-{#                </div>#}
-{#                <div class="svg">#}
-{#                    <img src="./svg/bell.svg" alt="Notifications">#}
-{#                </div>#}
-{#                <div class="svg">#}
-{#                    <img src="./svg/down-arrow.svg" alt="Dropdown">#}
-{#                </div>#}
-            </div>
-            <div class="profile">
-{#                <div class="img" style="background-image: url('{{ asset('assets/img/profile.jpg') }}');"></div>#}
-                <div class="username">{{ user.firstName }} {{ user.lastName}} </div>
-            </div>
+        <!-- Buttons -->
+        <div class="actions">
+            <button class="btn update" onclick="window.location.href='/updateprofile';">Update Profile</button>
+            <button class="btn logout" onclick="window.location.href='/logout';">Logout</button>
         </div>
-
-
-
-    </header>
+    </div>
+</header>
 
 {#    Sidebar left#}
     <div class="sideBarContainer">
@@ -85,58 +983,47 @@
                                     style="background-image: url('{{ asset('assets/img/plus.png') }}');
                                             width: 20px; height: 20px; border: none; cursor: pointer;">
                             </button>
-{#                            <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/plus.png') }}');#}
-{#                                    width: 15px; height: 15px">#}
-{#                            </div>#}
+
                         </form>
 
                     </div>
                 {% endfor %}
 
             </div>
-
-{#            <div class="container">#}
-{#                <div class="mainTitle">#}
-{#                    <h3 class="padding">Your Shortcuts</h3>#}
-{#                    <a href="#">Edit</a>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile r-10" style="background-image: url(./img/code1.jpg);"></div>#}
-{#                    <div class="name">Html Css Javascript</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile r-10" style="background-image: url(./img/code2.jpg);"></div>#}
-{#                    <div class="name">Tutorials</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile r-10" style="background-image: url(./img/code3.jpg);"></div>#}
-{#                    <div class="name">Coding</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile r-10" style="background-image: url(./img/code4.jpg);"></div>#}
-{#                    <div class="name">VueJS</div>#}
-{#                </div>#}
-{#                <div class="globalProfile">#}
-{#                    <div class="globalRoundProfile circle">#}
-{#                        <i class="fas fa-angle-down"></i>#}
-{#                    </div>#}
-{#                    <div class="name">See More</div>#}
-{#                </div>#}
-{#            </div>#}
         </div>
 
         <div class="sidebar right">
             <div class="container">
 
+                <!-- Add New Group -->
+                <div class="add-group-container">
+                    <button class="add-group-button btn-open-modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        <span>Add New Group</span>
+                    </button>
+
+                    <!-- Hidden Add Group Form -->
+                    <div class="add-group-form" id="addGroupForm">
+                        <form action="" method="POST">
+                            <input type="text" name="groupName" placeholder="Enter Group Name" class="group-name-input" required>
+                            <button type="submit" class="submit-group-button">Create Group</button>
+                        </form>
+                    </div>
+                </div>
+
                 {% for mbr in memberships %}
-                    <div class="globalProfile join_grp">
-                        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">
-                            <input type="hidden" name="groupId" value="{{ mbr.id }}">
+                    <div class="globalProfile join_grp" onclick="openAlertModal({{ mbr.id }})">
+{#                        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">#}
+{#                            <input type="hidden" name="groupId" value="{{ mbr.id }}">#}
                             <button type="submit" class="globalRoundProfile"
                                     style="background-image: url('{{ asset('assets/img/minus.png') }}');
                                             width: 20px; height: 20px; border: none; cursor: pointer;">
                             </button>
-                        </form>
+{#                        </form>#}
                         <div class="name">{{ mbr.name }}</div>
                     </div>
                 {% endfor %}
@@ -147,67 +1034,6 @@
 
     <div class="sectionCenter">
 
-{#        <div class="story">#}
-{#            <div class="cover">#}
-{#                <div class="create">#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/plusWhite.svg" alt="Create Story">#}
-{#                    </div>#}
-{#                    <h3>Create a <br> Story</h3>#}
-{#                </div>#}
-{#                <div class="bg" style="background-image: url(./img/profile_story.jpg);">#}
-{#                    <span></span>#}
-{#                </div>#}
-{#            </div>#}
-
-{#            <div class="cover">#}
-{#                <div class="pro">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/2.jpg);"></div>#}
-{#                </div>#}
-{#                <h3>FilipCodes YT</h3>#}
-{#                <div class="bg" style="background-image: url(./img/7.jpg);">#}
-{#                    <span></span>#}
-{#                </div>#}
-{#            </div>#}
-
-{#            <div class="cover">#}
-{#                <div class="pro">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/3.jpg);"></div>#}
-{#                </div>#}
-{#                <h3>User Name</h3>#}
-{#                <div class="bg" style="background-image: url(./img/8.jpg);">#}
-{#                    <span></span>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="cover">#}
-{#                <div class="pro">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/4.jpg);"></div>#}
-{#                </div>#}
-{#                <h3>User Name</h3>#}
-{#                <div class="bg" style="background-image: url(./img/9.jpg);">#}
-{#                    <span></span>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="cover">#}
-{#                <div class="pro">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/5.jpg);"></div>#}
-{#                </div>#}
-{#                <h3>User Name</h3>#}
-{#                <div class="bg" style="background-image: url(./img/10.jpg);">#}
-{#                    <span></span>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="cover">#}
-{#                <div class="pro">#}
-{#                    <div class="globalRoundProfile" style="background-image: url(./img/6.jpg);"></div>#}
-{#                </div>#}
-{#                <h3>User Name</h3>#}
-{#                <div class="bg" style="background-image: url(./img/11.jpg);">#}
-{#                    <span></span>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-
         <div class="createPost">
             <div class="input">
                 <div class="globalRoundProfile" style="background-image: url('{{ asset('assets/img/2.jpg') }}');">
@@ -217,27 +1043,6 @@
                     What's on your mind, FilipCodes YT?
                 </div>
             </div>
-
-{#            <div class="buttons">#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/live_video.svg" alt="">#}
-{#                    </div>#}
-{#                    <h4>Live Video</h4>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/photo.svg" alt="">#}
-{#                    </div>#}
-{#                    <h4>Photo/Video</h4>#}
-{#                </span>#}
-{#                <span>#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/smile.svg" alt="">#}
-{#                    </div>#}
-{#                    <h4>Feeling/Activity</h4>#}
-{#                </span>#}
-{#            </div>#}
         </div>
 
         {% if posts is not null and posts|length > 0 %}
@@ -263,34 +1068,37 @@
                     </div>
 
                     <div class="likeShare">
-                        <form action="{{ path('post_upvote', { id: p.post_id }) }}" method="POST" class="upvote-form">
-                            <button type="submit" class="upvote-button">
-                                <div class="svg">
-                                    <img src="{{ asset('assets/svg/upvote.svg') }}" alt="Upvote">
-                                </div>
-                                <h3>{{ p.upvotes }}</h3>
-                            </button>
-                        </form>
+                        <span>
+                            <form action="{{ path('post_upvote', { id: p.post_id }) }}" method="POST" style="display: inline">
+                                <button type="submit" style="display: inline-flex; border: none; background: none; cursor: pointer">
+                                    <div class="svg">
+                                        <img src="{{ asset('assets/svg/upvote.svg') }}" alt="Upvote">
+                                    </div>
+                                    <h3>{{ p.upvotes }}</h3>
+                                </button>
+                            </form>
+                        </span>
 
                         <span>
-{#                        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">#}
-                            {#                            <input type="hidden" name="groupId" value="{{ mbr.id }}">#}
-                            {#                            <button type="submit" class="globalRoundProfile"#}
-                            {#                                    style="background-image: url('{{ asset('assets/img/minus.png') }}');#}
-                            {#                                            width: 20px; height: 20px; border: none; cursor: pointer;">#}
-                            {#                            </button>#}
-                            {#                        </form>#}
-                        <div class="svg">
-                            <img src="{{ asset('assets/svg/downvote.svg') }}" alt="">
-                        </div>
-                        <h3>{{ p.downvotes }}</h3>
-                    </span>
-                        <span>
-                        <div class="svg">
-                            <img src="{{ asset('assets/svg/comment.svg') }}" alt="">
-                        </div>
-                        <h3>Comment</h3>
-                    </span>
+                            <form action="{{ path('post_downvote', { id: p.post_id }) }}" method="POST" style="display: inline">
+                                <button type="submit" style="display: inline-flex; border: none; background: none; cursor: pointer">
+                                    <div class="svg">
+                                        <img src="{{ asset('assets/svg/downvote.svg') }}" alt="downvote">
+                                    </div>
+                                    <h3>{{ p.downvotes }}</h3>
+                                </button>
+                            </form>
+                        </span>
+                        <span onclick="openModal('post1')">
+{#                            <form action="{{ path('post_comment', { id: p.post_id }) }}" method="POST" style="display: inline">#}
+{#                                <button type="submit" style="display: inline-flex; border: none; background: none; cursor: pointer">#}
+{#                                    <div class="svg">#}
+{#                                        <img src="{{ asset('assets/svg/comment.svg') }}" alt="comment">#}
+{#                                    </div>#}
+                                    <h3 >Comment</h3>
+{#                                </button>#}
+{#                            </form>#}
+                        </span>
                     </div>
                 </div>
             {% endfor %}
@@ -298,83 +1106,6 @@
             <p>No posts available.</p>
         {% endif %}
 
-{#        <div class="rooms">#}
-{#            <div class="title">#}
-{#                <div class="left">#}
-{#                    <i class="fas fa-video"></i>#}
-{#                    <h3>Rooms</h3>#}
-{#                    <p>Video chat with friends</p>#}
-{#                    <i class="fas fa-exclamation-circle"></i>#}
-{#                </div>#}
-{#                <div class="right">#}
-{#                    <a href="#">Create Room</a>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="profiles">#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/profile.jpg);">#}
-{#                    <div class="svg">#}
-{#                        <img src="./svg/plusWhite.svg" alt="">#}
-{#                    </div>#}
-{#                    <span></span>#}
-{#                    <div class="darkSpan"></div>#}
-{#                </div>#}
-
-{#                <div class="globalRoundProfile" style="background-image: url(./img/1.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/2.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/3.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/4.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/5.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/6.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/7.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/8.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/9.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/10.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/11.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#                <div class="globalRoundProfile" style="background-image: url(./img/12.jpg);">#}
-{#                    <span></span>#}
-{#                    <div class="active"></div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-
-{#    </div>#}
-{#        <button class="btn" id="openModal">Open Post Modal</button>#}
-{#        <form action="{{ path('remove_membership', { 'id': mbr.id }) }}" method="POST" style="display: inline;">#}
-
-{#        </form>#}
         <div class="modal" id="postModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -398,7 +1129,6 @@
                         <label for="postContent">Content</label>
                         <textarea id="postContent" name="content" rows="4" placeholder="Write your post..." required></textarea>
                     </div>
-{#                    <button type="submit" class="btn-primary">Post</button>#}
                     <button type="submit" class="btn">
                         <i class="fas fa-paper-plane"></i> Post
                     </button>
@@ -407,7 +1137,48 @@
             </div>
         </div>
 
+        <!-- Comment Modal -->
+        <div class="modal-overlay" id="commentModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Comments</h3>
+                    <span class="modal-close" onclick="closeModal()">×</span>
+                </div>
+                <div class="comment-section">
+                    <!-- Example Comment -->
+                    <div class="comment">
+                        <div class="comment-profile" style="background-image: url('https://via.placeholder.com/40');"></div>
+                        <div class="comment-details">
+                            <div class="comment-author">John Doe</div>
+                            <div class="comment-meta">Posted on Dec 25, 2024, 14:30</div>
+                            <div class="comment-text">This is a sample comment for the post.</div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="comment-profile" style="background-image: url('https://via.placeholder.com/40');"></div>
+                        <div class="comment-details">
+                            <div class="comment-author">Jane Smith</div>
+                            <div class="comment-meta">Posted on Dec 24, 2024, 18:00</div>
+                            <div class="comment-text">Another insightful comment here.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-input-container">
+                    <input type="text" class="comment-input" placeholder="Write your comment...">
+                    <button class="comment-button">Post</button>
+                </div>
+            </div>
+        </div>
 
+        <script>
+            function openModal() {
+                document.getElementById('commentModal').classList.add('active');
+            }
+
+            function closeModal() {
+                document.getElementById('commentModal').classList.remove('active');
+            }
+        </script>
         <script>
             const openModalButton = document.getElementById('openModal');
             const closeModalButton = document.getElementById('closeModal');
@@ -428,4 +1199,106 @@
             });
         </script>
     </div>
+
+
+<!-- Modal -->
+<div id="styledModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Create New Group</h2>
+            <span class="close-button" id="closeModalButton">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form action="{{ path('add_new_group') }}" method="POST">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter name" />
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter description"></textarea>
+                </div>
+                <div class="form-actions">
+{#                    <button type="button" class="btn-cancel" id="closeModalButton2">Cancel</button>#}
+                    <button type="submit" class="btn-submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const openModalButton = document.querySelector(".btn-open-modal");
+        const closeModalButtons = document.querySelectorAll("#closeModalButton, #closeModalButton2");
+        const modal = document.getElementById("styledModal");
+
+        // Open Modal
+        openModalButton.addEventListener("click", () => {
+            modal.style.display = "block";
+        });
+
+        // Close Modal
+        closeModalButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                modal.style.display = "none";
+            });
+        });
+
+        // Close Modal on Outside Click
+        window.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+
+</script>
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h2>Leave Group</h2>
+        <p>Are you sure you want to leave this group?</p>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <form action="{{ path('remove_membership')}}" method="POST" style="display: inline;">
+                <input  type="hidden" id="groupIdset" name="groupId" value="">
+                <button type="submit" class="btn-confirm" >Leave</button>
+            </form>
+        </div>
+    </div>
+</div>
+{#<button onclick="openModal()">Leave Group</button>#}
+
+<script>
+    function openAlertModal(groupId) {
+        const inputElement = document.getElementById('groupIdset');
+        if (inputElement) {
+            inputElement.value = groupId; // Set the value dynamically
+            console.log("Input value set to:", inputElement.value); // Debugging output
+        } else {
+            console.error("Input element with id 'groupIdset' not found!");
+        }
+        const modal = document.getElementById('confirmModal');
+        if (modal) {
+            modal.style.display = 'flex'; // Show the modal
+        } else {
+            console.error("Modal not found!");
+        }    }
+
+
+    function closeModal() {
+        document.getElementById('confirmModal').style.display = 'none';
+    }
+
+    function leaveGroup() {
+        // Add logic to handle leaving the group
+        alert('You have left the group!');
+        closeModal();
+    }
+
+</script>
+
+
 {#</body>#}

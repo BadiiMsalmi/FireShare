@@ -91,21 +91,17 @@ final class MembershipController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/remove/{id}', name: 'remove_membership', methods: ['POST'])]
-    public function delete(int $id, Request $request, Security $security, EntityManagerInterface $entityManager): Response
+    #[Route('/remove', name: 'remove_membership', methods: ['POST'])]
+    public function delete( Request $request, Security $security, EntityManagerInterface $entityManager): Response
     {
-//        if ($this->isCsrfTokenValid('delete'.$membership->getId(), $request->getPayload()->getString('_token'))) {
-//            $entityManager->remove($membership);
-//            $entityManager->flush();
-//        }
-
         $user = $security->getUser();
 
         $groupId = $request->request->get('groupId');
-        $group = $entityManager->getRepository(Groups::class)->find($id);
+        $group = $entityManager->getRepository(Groups::class)->find($groupId);
+
         if (!$group) {
             $this->addFlash('error', 'Group not found.');
-            return $this->redirectToRoute('homepage');
+            return $this->render('user/index.html.twig', ["group" => $group, "user" => $user->getId()]);
         }
 
         $membership = $entityManager->getRepository(Membership::class)->findOneBy([
