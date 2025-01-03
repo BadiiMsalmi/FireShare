@@ -29,19 +29,13 @@ class Post
     #[ORM\Column(type: "integer")]
     private int $downvotes = 0;
 
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "posts")]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-
-
-
-
     #[ORM\ManyToOne(inversedBy: 'postes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Groups $group = null;
-
 
     /**
      * @var Collection<int, Comment>
@@ -49,23 +43,13 @@ class Post
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', orphanRemoval: true)]
     private Collection $comments;
 
-//    /**
-//     * @var Collection<int, vote>
-//     */
-//    #[ORM\OneToMany(targetEntity: vote::class, mappedBy: 'post', orphanRemoval: true)]
-//    private Collection $votes;
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-//        $this->votes = new ArrayCollection();
-        $this->upvotes = 0; // Or any other default value
-        $this->downvotes = 0; // Or any other default value
-
+        $this->upvotes = 0;
+        $this->downvotes = 0;
         $this->createdAt = new \DateTime();
     }
-
-
 
     public function getId(): ?int
     {
@@ -170,65 +154,10 @@ class Post
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
             if ($comment->getPost() === $this) {
                 $comment->setPost(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPost(): ?self
-    {
-        return $this->post;
-    }
-
-    public function setPost(?self $post): static
-    {
-        $this->post = $post;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getVotes(): Collection
-    {
-        return $this->votes;
-    }
-
-    public function addVote(self $vote): static
-    {
-        if (!$this->votes->contains($vote)) {
-            $this->votes->add($vote);
-            $vote->setPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVote(self $vote): static
-    {
-        if ($this->votes->removeElement($vote)) {
-            // set the owning side to null (unless already changed)
-            if ($vote->getPost() === $this) {
-                $vote->setPost(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getGroupOfPost(): ?Group
-    {
-        return $this->groupOfPost;
-    }
-
-    public function setGroupOfPost(?Group $groupOfPost): static
-    {
-        $this->groupOfPost = $groupOfPost;
 
         return $this;
     }
